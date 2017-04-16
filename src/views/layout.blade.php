@@ -44,6 +44,9 @@
     integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
     crossorigin="anonymous"></script>
     <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsrender/0.9.84/jsrender.min.js" 
+    integrity="sha256-QTUWKa+JGRD76a4eJlFh8vKZXYQeSXdyFZaFlvo225A=" 
+    crossorigin="anonymous"></script>
     @stack('scripts')
   </body>
 </html>
