@@ -1,5 +1,5 @@
 /* global $*/
-var sort_order = "desc", sort_field="last_modified",page = 1;
+var sort_order = "desc", sort_field="last_modified",page = 1,page_size = 5;
 
 function sort(field){
     field = $(field);
@@ -10,6 +10,13 @@ function sort(field){
     sort_field = field.data('sort');
     
     fetch();
+}
+
+function change_page(){
+    if ($('#page_size').val() != "") {
+        page_size = $('#page_size').val();
+        fetch();
+    }
 }
 
 function next(){
@@ -26,6 +33,7 @@ function fetch(){
     $('#progress').toggleClass('hidden');
     var params = {
     	page : page,
+    	page_size : page_size,
     	sort_field : sort_field,
     	sort_order : sort_order
     };

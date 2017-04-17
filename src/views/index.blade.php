@@ -17,18 +17,20 @@
       </tbody>
       <tfoot>
         <tr>
+            <td></td>
+            <td></td>
+            <td></td>
             <td>
-                Page Size:
-                <select>
-                    <option value="10">5</option>
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="30">30</option>
-                </select>
+              Page Size:   
+              <div class="mdl-textfield mdl-js-textfield fifth-width">
+                <input class="mdl-textfield__input" type="number" id="page_size" 
+                value = "5" required>
+                <span class="mdl-textfield__error">Invalid Page Size</span>
+              </div>
+              <button class="mdl-button mdl-js-button" onclick="change_page()">
+                  Change
+              </button>
             </td>
-            <td></td>
-            <td></td>
-            <td></td>
             <td>
               <button class="mdl-button mdl-js-button" onclick="previous()" id="previous">
                   <i class="material-icons">keyboard_arrow_left</i>

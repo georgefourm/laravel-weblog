@@ -14,6 +14,12 @@
       .full-width {
           width: 100%;
       }
+      .fifth-width{
+        width: 20%;
+      }
+      .left-align{
+        text-align: left;
+      }
       .link {
         color: #004009
       }
