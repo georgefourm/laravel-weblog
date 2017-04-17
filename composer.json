@@ -1,7 +1,7 @@
 {
     "name": "georgesdoe/laravel-weblog",
     "description": "A simple utility to view your application's logs online",
-    "type": "Laravel Package",
+    "type": "library",
     "license": "BSD 3-Clause",
     "authors": [
         {
