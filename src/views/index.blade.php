@@ -15,6 +15,31 @@
       </thead>
       <tbody>
       </tbody>
+      <tfoot>
+        <tr>
+            <td>
+                Page Size:
+                <select>
+                    <option value="10">5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                </select>
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+              <button class="mdl-button mdl-js-button" onclick="previous()" id="previous">
+                  <i class="material-icons">keyboard_arrow_left</i>
+              </button>
+                Page <span id="current">0</span>/<span id="total">0</span>
+              <button class="mdl-button mdl-js-button" onclick="next()" id="next">
+                  <i class="material-icons">keyboard_arrow_right</i>
+              </button>
+            </td>
+        </tr>
+      </tfoot>
     </table>
 </div>
 <div id="toast" class="mdl-js-snackbar mdl-snackbar">
@@ -23,85 +48,12 @@
 </div>
 @endsection
 @push('scripts')
-    <script>
-    /* global $*/
-        $(document).ready(function(){
-            fetch();
-        });
-        
-        function sort(field){
-            field = $(field);
-            field.toggleClass("mdl-data-table__header--sorted-descending");
-            field.toggleClass("mdl-data-table__header--sorted-ascending");
-            
-            var order = field.hasClass("mdl-data-table__header--sorted-ascending")? "asc" : "desc";
-            fetch({
-                sort_field : field.data('sort'),
-                sort_order : order
-            });
-        }
-        
-        function fetch(params){
-            $('#progress').toggleClass('hidden');
-            $.get(window.location+'/fetch',params || {})
-            .done(function(data){
-                data = data.map(function(row){
-                    return {
-                        filename : row.filename,
-                        last_modified : localize(row.last_modified),
-                        size : humanize(row.size)
-                    };
-                });
-                
-                var template = $.templates("#row-template");
-                template = template.render(data);
-                $('tbody').empty();
-                $('tbody').append(template);
-                
-                $('#progress').toggleClass('hidden');
-            })
-            .fail(function(error){
-                $('#progress').toggleClass('hidden');
-                toast("Error fetching logs");
-            }); 
-        }
-        
-        function localize(unix){
-            return (new Date(unix * 1000)).toLocaleString();
-        }
-        
-        function humanize(bytes){
-            var sizes = ['B','KB','MB','GB','TB'];
-            var order = Math.floor(((bytes+"").length - 1) / 3);
-            var size = order >= sizes.length ? ">1024TB" : sizes[order];
-            var rounded = (bytes/Math.pow(1024,order)).toFixed(2);
-            return rounded+""+size;
-        }
-        
-        function remove(button){
-            var button = $(button);
-            button.prop('disabled',true);
-            
-            $('#progress').toggleClass('hidden');
-            $.post(window.location+'/delete',{
-                file:button.data('file')
-            }).done(function(){
-                button.closest('.data-row').remove();
-                $('#progress').toggleClass('hidden');
-                toast("Log deleted");
-            }).fail(function(error){
-                button.prop('disabled',false);
-                $('#progress').toggleClass('hidden');
-                toast("Error deleting file");
-            });
-        }
-        function toast(message){
-            var data = {message: message};
-            document.querySelector('#toast').MaterialSnackbar.showSnackbar(data);
-        }
-    </script>
+<script type="text/javascript" src="/vendor/weblog/functions.js"></script>
+<script>
+  $(document).ready(function(){ fetch(); });
+</script>
     
-    <script id="row-template" type="text/x-jsrender">
+<script id="row-template" type="text/x-jsrender">
         <tr class="data-row">
             <td class="mdl-data-table__cell--non-numeric">
                 <a href="logs/show?file=@{{:filename}}" class="link">
@@ -111,12 +63,12 @@
             <td>@{{:size}}</td>
             <td class="timestamp">@{{: last_modified}}</td>
             <td>
+            </td>
+            <td>
                 <a class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
                     href="logs/download?file=@{{:filename}}">
                     Download
                 </a>
-            </td>
-            <td>
                 <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent delete"
                         data-file="@{{:filename}}" onclick="remove(this)">
                     Delete

@@ -14,12 +14,17 @@ class WeblogController extends Controller
     }
     
     public function data(Request $request){
-        $files = 
-        collect(Storage::disk('logs')->files())
+        $files = Storage::disk('logs')->files();
+        $per_page = $request->input('page_size',5);
+        
+        $files = collect($files)
         ->reject(function($value,$key){
             //Filter out hidden files
             return strpos($value,".") == 0;
-        })
+        });
+        
+        $total = $files->count();
+        $files = $files
         ->map(function($file){
           return [
                 'filename'=>$file,
@@ -34,24 +39,22 @@ class WeblogController extends Controller
             $files = $files->sortByDesc($request->input('sort_field','last_modified'));
         }
         
-        return response()->json($files->values());
+        $files = $files->forPage($request->input('page',1),$per_page);
+        
+        $result = [
+            'files' => $files->values(),
+            'total' => $total,
+            'per_page' => $per_page,
+            'current_page' => $request->input('page',1)
+        ];
+        return response()->json($result);
     }
     
     public function show(Request $request){
-        $path = storage_path('logs')."/".$request->file;
-        $file = new \SplFileObject($path);
-        $iterator = new \LimitIterator($file, 0, 100);
-        
-        $result = "";
-        foreach($iterator as $line) {
-            $result .= $line;
+        if (!$this->check($request->file)) {
+            return response()->json(['message'=>'Invalid File'],400);
         }
-        
-        return view('weblog::show',['text'=>$result]);
-    }
-    
-    public function stream(Request $request){
-        
+        return view('weblog::show',['text'=>Storage::disk('logs')->get($request->file)]);
     }
     
     public function download(Request $request){
@@ -68,17 +71,6 @@ class WeblogController extends Controller
         }
         Storage::disk('logs')->delete($filename);
         return response()->json(['message'=>'File Deleted']);
-    }
-    
-    function humanize($bytes) {
-        $sizes = ['B','KB','MB','GB','TB'];
-        $factor = floor((strlen($bytes) - 1) / 3);
-        if (count($sizes) <= $factor) {
-            $size = ">1024TB";
-        }else{
-            $size = $sizes[$factor];
-        }
-        return sprintf("%.2f", $bytes / pow(1024, $factor)) .$size;
     }
     
     function check($file){
