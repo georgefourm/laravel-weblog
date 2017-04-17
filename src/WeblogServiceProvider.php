@@ -12,7 +12,8 @@ class WeblogServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__.'/views', 'weblog');
         $this->publishes([
             __DIR__.'/public' =>public_path('vendor/weblog'),
-        ]);
+            __DIR__.'/weblog.php' =>config_path('weblog.php'),
+        ],'main');
         $this->publishes([
             __DIR__.'/views' => resource_path('views/vendor/weblog'),
         ],'views');
