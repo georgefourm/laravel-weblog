@@ -1,10 +1,10 @@
 # laravel-weblog
-A Laravel package to view and manage your application's logs online
-This package is meant to be used as a drop-in solution in order to manage and download your application's log files,
+A Laravel package to view and manage your application's logs online.  
+This package is meant to be used as a drop-in solution in order to manage and download your application's log files.
 
 ## Requirements
 * PHP >= 5.6
-* Laravel >= 5.4 (Although >=5.2 should work too, but isn't tested)
+* Laravel >= 5.4
 
 ## Installation
 * Run `composer install georgesdoe/laravel-weblog`
