@@ -2,7 +2,7 @@
     "name": "georgesdoe/laravel-weblog",
     "description": "A simple utility to view your application's logs online",
     "type": "library",
-    "license": "BSD 3-Clause",
+    "license": "BSD-3-Clause",
     "authors": [
         {
             "name": "George Fourmouzis",
